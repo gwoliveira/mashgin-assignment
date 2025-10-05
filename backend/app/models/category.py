@@ -8,4 +8,6 @@ class Category(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     image_id = Column(String)
+    
+    items = relationship("Item", back_populates="category")
 
