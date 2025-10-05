@@ -1,7 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
-from database import SessionLocal, engine
 from app.routers import categories, items
 
 
