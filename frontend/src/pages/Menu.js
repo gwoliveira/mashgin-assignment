@@ -43,10 +43,11 @@ const Menu = () => {
     : items;
 
   return (
-    <Container>
+    <>
       <Category
         categories={categories}
         handleCategoryClick={handleCategoryClick}
+        sx={{ mt: 4 }}
       />
       <Grid container spacing={2}>
         {filteredItems.map(item => (
@@ -55,7 +56,7 @@ const Menu = () => {
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </>
   );
 };
 

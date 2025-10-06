@@ -1,17 +1,32 @@
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Typography, Box } from '@mui/material';
 
-const Category = ({ categories, handleCategoryClick }) => {
+const Category = ({ categories, selectedCategory, handleCategoryClick, sx }) => {
+  const handleChange = (event, newCategory) => {
+    handleCategoryClick(newCategory);
+  };
+
   return (
-    <Box sx={{ mb: 2 }}>
-      <h2>Categories</h2>
-      <Button variant="contained" onClick={() => handleCategoryClick(null)}>All</Button>
-      {categories.map(category => (
-        <Button key={category.id} variant="outlined" onClick={() => handleCategoryClick(category.id)} sx={{ ml: 1 }}>
-          <img src={category.image_url} alt={category.name} width="50" style={{ marginRight: '8px' }} />
-          {category.name}
-        </Button>
-      ))}
+    <Box sx={{ mb: 4, textAlign: 'center', ...sx }}>
+      <Typography variant="h4" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+        Our Menu
+      </Typography>
+      <ToggleButtonGroup
+        value={selectedCategory}
+        exclusive
+        onChange={handleChange}
+        aria-label="category selection"
+        sx={{ justifyContent: 'center' }}
+      >
+        <ToggleButton value={null} aria-label="all categories">
+          All
+        </ToggleButton>
+        {categories.map(category => (
+          <ToggleButton key={category.id} value={category.id} aria-label={category.name}>
+            {category.name}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
     </Box>
   );
 };
