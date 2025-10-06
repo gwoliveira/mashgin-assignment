@@ -1,17 +1,20 @@
-from pydantic import BaseModel
-
+from pydantic import BaseModel, computed_field
+from fastapi import Request
 
 class CategoryBase(BaseModel):
     name: str
     image_id: str
 
-
 class CategoryCreate(CategoryBase):
-    pass
-
+    id: int
 
 class Category(CategoryBase):
     id: int
 
+    @computed_field
+    @property
+    def image_url(self) -> str:
+        return f"/static/images/{self.image_id}.jpg"
+
     class Config:
-        from_attributes = True
+        orm_mode = True
