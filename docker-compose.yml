@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build: ./backend
     ports:
       - "8000:80"
     volumes:
-      - .:/code
+      - ./backend:/code
     depends_on:
       - db
     env_file:
-      - .env
+      - ./backend/.env
   db:
     image: postgres:13
     ports:
@@ -18,7 +18,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env
+      - ./backend/.env
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - web
 
 volumes:
   postgres_data:
