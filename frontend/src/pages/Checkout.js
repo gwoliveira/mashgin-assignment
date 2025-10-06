@@ -13,6 +13,33 @@ import { CartContext } from '../context/CartContext';
 import { createOrder } from '../api';
 import CartItem from '../components/CartItem';
 import { useNavigate, Link } from 'react-router-dom';
+import { IMaskInput } from 'react-imask';
+
+const TextMaskAdapter = React.forwardRef(function TextMaskAdapter(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="00/00"
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+const CardNumberMaskAdapter = React.forwardRef(function CardNumberMaskAdapter(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="0000 0000 0000 0000"
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
@@ -39,9 +66,10 @@ const Checkout = () => {
 
     try {
       setErrorMessage('');
-      await createOrder(order);
+      const response = await createOrder(order);
+      const orderId = response.data.id;
       clearCart();
-      navigate('/');
+      navigate(`/order/${orderId}`);
     } catch (error) {
       console.error('Error creating order:', error);
       if (error.response && error.response.data && error.response.data.detail) {
@@ -103,6 +131,9 @@ const Checkout = () => {
               sx={{ mb: 2 }}
               value={cardNumber}
               onChange={(e) => setCardNumber(e.target.value)}
+              InputProps={{
+                inputComponent: CardNumberMaskAdapter,
+              }}
             />
             <TextField
               label="Card Holder"
@@ -121,6 +152,9 @@ const Checkout = () => {
                   sx={{ mb: 2 }}
                   value={expirationDate}
                   onChange={(e) => setExpirationDate(e.target.value)}
+                  InputProps={{
+                    inputComponent: TextMaskAdapter,
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -149,7 +183,7 @@ const Checkout = () => {
               >
                 Purchase
               </Button>
-              <Link to="/" style={{ textDecoration: 'none', width: '100%' }}>
+              <Link to="/" style={{ textDecoration: 'none', width: 'a100%' }}>
                 <Button variant="contained" color="secondary" fullWidth>
                   Continue Shopping
                 </Button>

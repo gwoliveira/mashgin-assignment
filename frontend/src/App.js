@@ -11,6 +11,7 @@ import {
 import { Routes, Route, Link } from 'react-router-dom';
 import Menu from './pages/Menu';
 import Checkout from './pages/Checkout';
+import OrderDetails from './pages/OrderDetails';
 
 import { CartProvider } from './context/CartContext';
 
@@ -59,6 +60,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Menu />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order/:orderId" element={<OrderDetails />} />
           </Routes>
         </Container>
       </CartProvider>
