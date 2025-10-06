@@ -1,7 +1,10 @@
-import React from 'react';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import React, { useContext } from 'react';
+import { Card, CardContent, CardMedia, Typography, Button, CardActions } from '@mui/material';
+import { CartContext } from '../context/CartContext';
 
 const Item = ({ item }) => {
+  const { addToCart } = useContext(CartContext);
+
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', '&:hover': { boxShadow: 6 } }}>
       <CardMedia
@@ -23,6 +26,11 @@ const Item = ({ item }) => {
           ${item.price}
         </Typography>
       </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => addToCart(item)}>
+          Add to Cart
+        </Button>
+      </CardActions>
     </Card>
   );
 };

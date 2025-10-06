@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getCategories, getItems } from '../api';
 import Item from '../components/Item';
 import Category from '../components/Category';
-import { Grid, Container } from '@mui/material';
+import Cart from '../components/Cart';
+import { Grid, Box } from '@mui/material';
 
 const Menu = () => {
   const [categories, setCategories] = useState([]);
@@ -11,18 +12,18 @@ const Menu = () => {
 
   useEffect(() => {
     getCategories()
-      .then(response => {
+      .then((response) => {
         setCategories(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching categories:', error);
       });
 
     getItems()
-      .then(response => {
+      .then((response) => {
         setItems(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching items:', error);
       });
   }, []);
@@ -30,33 +31,38 @@ const Menu = () => {
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
     getItems(categoryId)
-      .then(response => {
+      .then((response) => {
         setItems(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching items for category:', error);
       });
   };
 
   const filteredItems = selectedCategory
-    ? items.filter(item => item.category_id === selectedCategory)
+    ? items.filter((item) => item.category_id === selectedCategory)
     : items;
 
   return (
-    <>
-      <Category
-        categories={categories}
-        handleCategoryClick={handleCategoryClick}
-        sx={{ mt: 4 }}
-      />
-      <Grid container spacing={2}>
-        {filteredItems.map(item => (
-          <Grid item xs={12} sm={6} md={4} key={item.id}>
-            <Item item={item} />
-          </Grid>
-        ))}
-      </Grid>
-    </>
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Category
+          categories={categories}
+          handleCategoryClick={handleCategoryClick}
+          sx={{ mt: 4 }}
+        />
+        <Grid container spacing={2}>
+          {filteredItems.map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item.id}>
+              <Item item={item} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <Box sx={{ width: '300px', ml: 4 }}>
+        <Cart />
+      </Box>
+    </Box>
   );
 };
 
