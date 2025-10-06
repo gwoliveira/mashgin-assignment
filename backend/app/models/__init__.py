@@ -1,5 +1,7 @@
 from app.models.base import Base
-from app.models.category import Category
-from app.models.item import Item
+from .category import Category
+from .item import Item
+from .order import Order
+from .order_item import OrderItem
 
-__all__ = ["Base", "Category", "Item"]
+__all__ = ["Category", "Item", "Order", "OrderItem"]
