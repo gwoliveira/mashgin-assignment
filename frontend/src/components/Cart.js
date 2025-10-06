@@ -9,10 +9,11 @@ import {
 } from '@mui/material';
 import { CartContext } from '../context/CartContext';
 import CartItem from './CartItem';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
   const { cartItems, clearCart, getCartTotal } = useContext(CartContext);
-
+  
   return (
     <Paper
       elevation={3}
@@ -44,14 +45,21 @@ const Cart = () => {
             <Typography variant="h6">Total:</Typography>
             <Typography variant="h6">${getCartTotal().toFixed(2)}</Typography>
           </Box>
-          <Button
-            variant="contained"
-            color="secondary"
-            fullWidth
-            onClick={clearCart}
-          >
-            Clear Cart
-          </Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              onClick={clearCart}
+            >
+              Clear Cart
+            </Button>
+            <Link to="/checkout" style={{ textDecoration: 'none', width: '100%' }}>
+              <Button variant="contained" color="primary" fullWidth>
+                Checkout
+              </Button>
+            </Link>
+          </Box>
         </>
       )}
     </Paper>
