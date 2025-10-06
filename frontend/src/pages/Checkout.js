@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Typography,
@@ -17,6 +17,11 @@ import { useNavigate, Link } from 'react-router-dom';
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardHolder, setCardHolder] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handlePurchase = async () => {
     const order = {
@@ -24,15 +29,26 @@ const Checkout = () => {
         item_id: item.id,
         quantity: item.quantity,
       })),
+      payment: {
+        card_number: cardNumber,
+        card_holder: cardHolder,
+        expiration_date: expirationDate,
+        cvv: cvv,
+      },
     };
 
     try {
+      setErrorMessage('');
       await createOrder(order);
       clearCart();
       navigate('/');
     } catch (error) {
       console.error('Error creating order:', error);
-      alert('There was an error with your purchase. Please try again.');
+      if (error.response && error.response.data && error.response.data.detail) {
+        setErrorMessage(error.response.data.detail[0].msg);
+      } else {
+        setErrorMessage('There was an error with your purchase. Please try again.');
+      }
     }
   };
 
@@ -85,12 +101,16 @@ const Checkout = () => {
               variant="outlined"
               fullWidth
               sx={{ mb: 2 }}
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
             />
             <TextField
               label="Card Holder"
               variant="outlined"
               fullWidth
               sx={{ mb: 2 }}
+              value={cardHolder}
+              onChange={(e) => setCardHolder(e.target.value)}
             />
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -99,6 +119,8 @@ const Checkout = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ mb: 2 }}
+                  value={expirationDate}
+                  onChange={(e) => setExpirationDate(e.target.value)}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -107,9 +129,16 @@ const Checkout = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ mb: 2 }}
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
                 />
               </Grid>
             </Grid>
+            {errorMessage && (
+              <Typography color="error" sx={{ mb: 2 }}>
+                {errorMessage}
+              </Typography>
+            )}
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant="contained"
