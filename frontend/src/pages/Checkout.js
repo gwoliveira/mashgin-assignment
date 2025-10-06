@@ -10,6 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 import { CartContext } from '../context/CartContext';
+import { createOrder } from '../api';
 import CartItem from '../components/CartItem';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -17,10 +18,22 @@ const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  const handlePurchase = () => {
-    alert('Purchase successful!');
-    clearCart();
-    navigate('/');
+  const handlePurchase = async () => {
+    const order = {
+      items: cartItems.map(item => ({
+        item_id: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      await createOrder(order);
+      clearCart();
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating order:', error);
+      alert('There was an error with your purchase. Please try again.');
+    }
   };
 
   return (
