@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, Paper, Divider, List, ListItem, ListItemText, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, Paper, Divider, List, ListItem, ListItemText, CircularProgress, Alert, Grid } from '@mui/material';
 import { getOrderDetails } from '../api';
 
 const OrderDetails = () => {
@@ -50,32 +50,61 @@ const OrderDetails = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Order Details
-      </Typography>
-      <Paper elevation={3} sx={{ p: 2 }}>
-        <Typography variant="h6" component="h2" gutterBottom>
-          Order Summary
+    <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+      <Paper elevation={3} sx={{
+        width: '100%',
+        maxWidth: 400,
+        p: 3,
+        mt: 4,
+        fontFamily: 'monospace',
+        bgcolor: '#f9f9f9',
+        border: '1px dashed #ccc'
+      }}>
+        <Typography variant="h5" component="h1" align="center" gutterBottom sx={{ fontWeight: 'bold' }}>
+          Order Receipt
         </Typography>
-        <Divider sx={{ mb: 2 }} />
-        <Typography variant="body1"><strong>Order ID:</strong> {order.id}</Typography>
-        <Typography variant="body1"><strong>Status:</strong> {order.status}</Typography>
-        <Typography variant="body1"><strong>Total Price:</strong> ${order.total_price.toFixed(2)}</Typography>
+        <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
 
-        <Typography variant="h6" component="h3" sx={{ mt: 3, mb: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={6}><Typography variant="body2">Order ID:</Typography></Grid>
+          <Grid item xs={6}><Typography variant="body2" align="right">{order.id}</Typography></Grid>
+
+          <Grid item xs={6}><Typography variant="body2">Status:</Typography></Grid>
+          <Grid item xs={6}><Typography variant="body2" align="right">{order.status}</Typography></Grid>
+
+          <Grid item xs={6}><Typography variant="body2">Date:</Typography></Grid>
+          <Grid item xs={6}><Typography variant="body2" align="right">{new Date().toLocaleDateString()}</Typography></Grid>
+        </Grid>
+
+        <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
+
+        <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
           Items
         </Typography>
-        <List>
+        <List dense sx={{ p: 0 }}>
           {order.items.map((item) => (
-            <ListItem key={item.id} divider>
-              <ListItemText
-                primary={`${item.item.name} x ${item.quantity}`}
-                secondary={`Price: $${item.price.toFixed(2)} each`}
-              />
+            <ListItem key={item.id} sx={{ px: 0, py: 0.5 }}>
+              <Grid container>
+                <Grid item xs={6}><Typography variant="body2">{item.item.name}</Typography></Grid>
+                <Grid item xs={2}><Typography variant="body2" align="center">x{item.quantity}</Typography></Grid>
+                <Grid item xs={4}><Typography variant="body2" align="right">${(item.price * item.quantity).toFixed(2)}</Typography></Grid>
+              </Grid>
             </ListItem>
           ))}
         </List>
+
+        <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
+
+        <Grid container>
+          <Grid item xs={6}><Typography variant="h6">Total:</Typography></Grid>
+          <Grid item xs={6}><Typography variant="h6" align="right">${order.total_price.toFixed(2)}</Typography></Grid>
+        </Grid>
+
+        <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
+
+        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          Thank you for your purchase!
+        </Typography>
       </Paper>
     </Box>
   );
