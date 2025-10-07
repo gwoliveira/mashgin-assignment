@@ -48,7 +48,14 @@ const Checkout = () => {
   const [cardHolder, setCardHolder] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const [cvv, setCvv] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e, setter, fieldName) => {
+    setter(e.target.value);
+    if (errors[fieldName]) {
+      setErrors(prev => ({ ...prev, [fieldName]: undefined }));
+    }
+  };
 
   const handlePurchase = async () => {
     const order = {
@@ -65,7 +72,7 @@ const Checkout = () => {
     };
 
     try {
-      setErrorMessage('');
+      setErrors({}); // Clear previous errors
       const response = await createOrder(order);
       const orderId = response.data.id;
       clearCart();
@@ -73,9 +80,14 @@ const Checkout = () => {
     } catch (error) {
       console.error('Error creating order:', error);
       if (error.response && error.response.data && error.response.data.detail) {
-        setErrorMessage(error.response.data.detail[0].msg);
+        const newErrors = {};
+        error.response.data.detail.forEach(err => {
+          const field = err.loc[err.loc.length - 1];
+          newErrors[field] = err.msg;
+        });
+        setErrors(newErrors);
       } else {
-        setErrorMessage('There was an error with your purchase. Please try again.');
+        setErrors({ general: 'There was an error with your purchase. Please try again.' });
       }
     }
   };
@@ -130,7 +142,9 @@ const Checkout = () => {
               fullWidth
               sx={{ mb: 2 }}
               value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
+              onChange={(e) => handleInputChange(e, setCardNumber, 'card_number')}
+              error={!!errors.card_number}
+              helperText={errors.card_number}
               InputProps={{
                 inputComponent: CardNumberMaskAdapter,
               }}
@@ -141,7 +155,9 @@ const Checkout = () => {
               fullWidth
               sx={{ mb: 2 }}
               value={cardHolder}
-              onChange={(e) => setCardHolder(e.target.value)}
+              onChange={(e) => handleInputChange(e, setCardHolder, 'card_holder')}
+              error={!!errors.card_holder}
+              helperText={errors.card_holder}
             />
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -151,7 +167,9 @@ const Checkout = () => {
                   fullWidth
                   sx={{ mb: 2 }}
                   value={expirationDate}
-                  onChange={(e) => setExpirationDate(e.target.value)}
+                  onChange={(e) => handleInputChange(e, setExpirationDate, 'expiration_date')}
+                  error={!!errors.expiration_date}
+                  helperText={errors.expiration_date}
                   InputProps={{
                     inputComponent: TextMaskAdapter,
                   }}
@@ -164,13 +182,15 @@ const Checkout = () => {
                   fullWidth
                   sx={{ mb: 2 }}
                   value={cvv}
-                  onChange={(e) => setCvv(e.target.value)}
+                  onChange={(e) => handleInputChange(e, setCvv, 'cvv')}
+                  error={!!errors.cvv}
+                  helperText={errors.cvv}
                 />
               </Grid>
             </Grid>
-            {errorMessage && (
+            {errors.general && (
               <Typography color="error" sx={{ mb: 2 }}>
-                {errorMessage}
+                {errors.general}
               </Typography>
             )}
             <Box sx={{ display: 'flex', gap: 1 }}>
