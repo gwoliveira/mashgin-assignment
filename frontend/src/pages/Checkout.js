@@ -50,6 +50,14 @@ const Checkout = () => {
   const [cvv, setCvv] = useState('');
   const [errors, setErrors] = useState({});
 
+  const fillFakePaymentInfo = () => {
+    setCardNumber('1111222233334444');
+    setCardHolder('JOHN DOE');
+    setExpirationDate('12/32');
+    setCvv('123');
+    setErrors({}); // Clear any existing errors
+  };
+
   const handleInputChange = (e, setter, fieldName) => {
     setter(e.target.value);
     if (errors[fieldName]) {
@@ -132,9 +140,14 @@ const Checkout = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant="h6" component="h2" gutterBottom>
-              Payment Information
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" component="h2">
+                Payment Information
+              </Typography>
+              <Button variant="outlined" size="small" onClick={fillFakePaymentInfo}>
+                Fill with Fake Data
+              </Button>
+            </Box>
             <Divider sx={{ mb: 2 }} />
             <TextField
               label="Card Number"
