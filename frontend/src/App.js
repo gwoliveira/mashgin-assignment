@@ -8,9 +8,10 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Menu from './pages/Menu';
 import Checkout from './pages/Checkout';
+import OrderDetails from './pages/OrderDetails';
 
 import { CartProvider } from './context/CartContext';
 
@@ -35,15 +36,31 @@ function App() {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              The Golden Spoon
-            </Typography>
+            <Link
+              to="/"
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src="/logo.svg"
+                alt="The Golden Spoon Logo"
+                style={{ height: '40px', marginRight: '10px' }}
+              />
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                The Golden Spoon
+              </Typography>
+            </Link>
           </Toolbar>
         </AppBar>
         <Container>
           <Routes>
             <Route path="/" element={<Menu />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order/:orderId" element={<OrderDetails />} />
           </Routes>
         </Container>
       </CartProvider>
