@@ -42,4 +42,4 @@ To get started with development, you'll need Docker and Docker Compose installed
 
 ## Project Management
 
-This project utilizes a GitHub Kanban dashboard to track issues and manage the development process. You can view the project board here: [https://github.com/users/gwoliveira/projects/1](https://github.com/users/gwoliveira/projects/1)
+This project utilizes a GitHub Kanban dashboard to track issues and manage the development process. All tasks were tracked using [https://github.com/gwoliveira/mashgin-assignment/issues](GitHub Issues). You can view the project board here: [https://github.com/users/gwoliveira/projects/1](https://github.com/users/gwoliveira/projects/1)
