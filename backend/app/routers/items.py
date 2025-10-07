@@ -9,7 +9,7 @@ from app.dependencies import get_db
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Item])
+@router.get("", response_model=List[Item])
 def read_items(
     category_id: Optional[int] = None, db: Session = Depends(get_db)
 ):
@@ -19,7 +19,7 @@ def read_items(
     return item_service.get_items(db, category_id=category_id)
 
 
-@router.post("/", response_model=Item, status_code=201)
+@router.post("", response_model=Item, status_code=201)
 def create_item(item: ItemCreate, db: Session = Depends(get_db)):
     """
     Create a new item.
