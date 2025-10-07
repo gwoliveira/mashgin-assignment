@@ -6,7 +6,7 @@ from app.services.order_service import OrderService
 
 router = APIRouter()
 
-@router.post("/", response_model=Order)
+@router.post("", response_model=Order)
 def create_order(order: OrderCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     service = OrderService(db)
     return service.create_order(order, background_tasks)

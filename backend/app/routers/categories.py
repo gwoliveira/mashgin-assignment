@@ -8,14 +8,14 @@ from app.dependencies import get_db
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Category])
+@router.get("", response_model=List[Category])
 def read_categories(db: Session = Depends(get_db)):
     """
     Retrieve all categories.
     """
     return category_service.get_categories(db)
 
-@router.post("/", response_model=Category, status_code=201)
+@router.post("", response_model=Category, status_code=201)
 def create_category(category: CategoryCreate, db: Session = Depends(get_db)):
     """
     Create a new category.
