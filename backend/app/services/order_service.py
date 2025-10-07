@@ -21,3 +21,6 @@ class OrderService:
             total_price += item.price * item_data.quantity
 
         return self.repository.create_order(order, total_price)
+
+    def get_order_details(self, order_id: int) -> Order:
+        return self.repository.get_order_by_id(order_id)

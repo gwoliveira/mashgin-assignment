@@ -10,3 +10,8 @@ router = APIRouter()
 def create_order(order: OrderCreate, db: Session = Depends(get_db)):
     service = OrderService(db)
     return service.create_order(order)
+
+@router.get("/{order_id}", response_model=Order)
+def get_order_details(order_id: int, db: Session = Depends(get_db)):
+    service = OrderService(db)
+    return service.get_order_details(order_id)

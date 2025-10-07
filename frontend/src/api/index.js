@@ -12,3 +12,7 @@ export const getItems = (categoryId) => {
 export const createOrder = (order) => {
   return axios.post('/orders', order);
 };
+
+export const getOrderDetails = (orderId) => {
+  return axios.get(`/orders/${orderId}`);
+};
