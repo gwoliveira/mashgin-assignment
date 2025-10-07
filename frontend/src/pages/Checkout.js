@@ -64,7 +64,7 @@ const Checkout = () => {
         quantity: item.quantity,
       })),
       payment: {
-        card_number: cardNumber,
+        card_number: cardNumber.replace(/\s/g, ''), // Remove spaces for backend validation
         card_holder: cardHolder,
         expiration_date: expirationDate,
         cvv: cvv,

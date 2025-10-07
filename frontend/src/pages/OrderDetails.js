@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Typography, Paper, Divider, List, ListItem, ListItemText, CircularProgress, Alert, Grid } from '@mui/material';
+import { useParams, Link } from 'react-router-dom';
+import { Box, Typography, Paper, Divider, List, ListItem, ListItemText, CircularProgress, Alert, Grid, Button } from '@mui/material';
 import { getOrderDetails } from '../api';
 
 const OrderDetails = () => {
@@ -10,10 +10,15 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let timer;
+
     const fetchOrderDetails = async () => {
       try {
         const response = await getOrderDetails(orderId);
         setOrder(response.data);
+        if (response.data.status === 'PENDING') {
+          timer = setTimeout(fetchOrderDetails, 5000);
+        }
       } catch (err) {
         setError('Failed to fetch order details.');
         console.error(err);
@@ -23,6 +28,10 @@ const OrderDetails = () => {
     };
 
     fetchOrderDetails();
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [orderId]);
 
   if (loading) {
@@ -50,7 +59,7 @@ const OrderDetails = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
       <Paper elevation={3} sx={{
         width: '100%',
         maxWidth: 400,
@@ -106,6 +115,13 @@ const OrderDetails = () => {
           Thank you for your purchase!
         </Typography>
       </Paper>
+      <Box sx={{ mt: 2 }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <Button variant="outlined" color="secondary">
+            Back to Menu
+          </Button>
+        </Link>
+      </Box>
     </Box>
   );
 };
